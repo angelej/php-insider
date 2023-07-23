@@ -1,0 +1,25 @@
+{
+    "name": "angelej/php-insider",
+    "authors": [
+        {
+            "name": "Jeremy Angele",
+            "email": "jeremy.angele@proton.me"
+        }
+    ],
+    "require": {
+        "nikic/php-parser": "^4.16"
+    },
+    "require-dev": {
+        "pestphp/pest": "^2.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Angelej\\PhpInsider\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
