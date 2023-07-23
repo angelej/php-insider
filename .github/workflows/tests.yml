@@ -1,0 +1,31 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+    test:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            fail-fast: false
+            matrix:
+                os: [ubuntu-latest]
+                php: [8.2, 8.1]
+
+        name: P${{ matrix.php }} - ${{ matrix.os }}
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  extensions: tokenizer
+                  coverage: xdebug
+
+            - name: Install dependencies
+              run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+            - name: Execute tests
+              run: ./vendor/bin/pest
