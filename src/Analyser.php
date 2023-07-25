@@ -7,6 +7,7 @@ use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use PhpParser\NodeTraverser;
 use Angelej\PhpInsider\Sinks\FileInclusion;
+use Angelej\PhpInsider\Sinks\CodeExecution;
 
 class Analyser {
 
@@ -19,7 +20,8 @@ class Analyser {
      * @var array|string[]
      */
     protected array $sinks = [
-        FileInclusion::class
+        FileInclusion::class,
+        CodeExecution::class
     ];
 
     public function __construct(){
