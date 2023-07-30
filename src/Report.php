@@ -3,9 +3,7 @@
 namespace Angelej\PhpInsider;
 
 use PhpParser\Node;
-use ReflectionClass;
 use Angelej\PhpInsider\Sinks\Sink;
-use const PHP_EOL;
 
 class Report {
 
@@ -54,12 +52,6 @@ class Report {
             'node' => $node,
             'sink' => $sink
         ];
-
-        $filename = $file->getRealPath();
-        $line = $node->getLine();
-        $sinkType = (new ReflectionClass($sink))->getShortName();
-
-        echo "Found {$sinkType} sink in file \"{$filename}:{$line}\"" . PHP_EOL;
     }
 
     /**

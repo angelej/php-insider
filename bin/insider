@@ -1,0 +1,41 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Angelej\PhpInsider\File;
+use Angelej\PhpInsider\Analyser;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+$app = new Application();
+$app->register('analyse')
+    ->addArgument('file', InputArgument::REQUIRED, 'File or directory path to analyse')
+    ->addOption('extension', '-e', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'File extension', ['php'])
+    ->addOption('exclude-file', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'File or directory to exclude', [])
+    ->setCode(function(InputInterface $input, OutputInterface $output): int {
+
+        $extensions = array_map(function($ext){
+            return ltrim(trim($ext), '.');
+        }, $input->getOption('extension'));
+
+        $excludedFiles = $input->getOption('exclude-file');
+        $file = $input->getArgument('file');
+        $files = is_dir($file) ? File::glob($file, $extensions, $excludedFiles) : new File($file);
+        $report = (new Analyser())->analyse($files);
+
+        foreach($report->get() as $item){
+
+            $line = $item['node']->getLine();
+            $filePath = $item['file']->getRealPath();
+            $sink = (new ReflectionClass($item['sink']))->getShortName();
+
+            $output->writeln('[!] Found '. $sink . ' sink in file ' . $filePath . ':' . $line);
+        }
+        return Command::SUCCESS;
+    });
+$app->run();
