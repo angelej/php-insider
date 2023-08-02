@@ -2,45 +2,28 @@
 
 namespace Angelej\PhpInsider\Sinks;
 
-use PhpParser\Node;
-use PhpParser\NodeFinder;
-use Angelej\PhpInsider\File;
-use Angelej\PhpInsider\Report;
-use PhpParser\NodeVisitorAbstract;
+use Angelej\PhpInsider\Location;
 
-abstract class Sink extends NodeVisitorAbstract {
+abstract class Sink implements SinkInterface {
 
     /**
-     * @var \Angelej\PhpInsider\Report
+     * @var \Angelej\PhpInsider\Location
      */
-    protected Report $report;
+    protected Location $location;
 
     /**
-     * @var \Angelej\PhpInsider\File
+     * @param  \Angelej\PhpInsider\Location $location
      */
-    protected File $file;
+    public function __construct(Location $location){
 
-    /**
-     * @var \PhpParser\NodeFinder
-     */
-    protected NodeFinder $nodeFinder;
-
-    /**
-     * @param  \Angelej\PhpInsider\File $file
-     */
-    public function __construct(File $file){
-
-        $this->file = $file;
-        $this->nodeFinder = new NodeFinder();
-        $this->report = Report::getInstance();
+        $this->location = $location;
     }
 
     /**
-     * @param  \PhpParser\Node $node
-     * @return void
+     * @return \Angelej\PhpInsider\Location
      */
-    protected function report(Node $node): void {
+    public function getLocation(): Location {
 
-        $this->report->add($this->file, $this, $node);
+        return $this->location;
     }
 }

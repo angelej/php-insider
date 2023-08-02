@@ -2,7 +2,6 @@
 
 namespace Angelej\PhpInsider;
 
-use PhpParser\Node;
 use Angelej\PhpInsider\Sinks\Sink;
 
 class Report {
@@ -15,7 +14,7 @@ class Report {
     /**
      * @var \Angelej\PhpInsider\File|null
      */
-    private ?File $ofFile = null;
+    private ?File $inFile = null;
 
     /**
      * @var string|null
@@ -25,10 +24,10 @@ class Report {
     /**
      * @var int|null
      */
-    private ?int $ofLine = null;
+    private ?int $inLine = null;
 
     /**
-     * @var array
+     * @var \Angelej\PhpInsider\Sinks\Sink[]
      */
     protected array $reports = [];
 
@@ -40,27 +39,21 @@ class Report {
     }
 
     /**
-     * @param  \Angelej\PhpInsider\File $file
      * @param  \Angelej\PhpInsider\Sinks\Sink $sink
-     * @param  \PhpParser\Node $node
      * @return void
      */
-    public function add(File $file, Sink $sink, Node $node): void {
+    public function add(Sink $sink): void {
 
-        $this->reports[] = [
-            'file' => $file,
-            'node' => $node,
-            'sink' => $sink
-        ];
+        $this->reports[] = $sink;
     }
 
     /**
      * @param  \Angelej\PhpInsider\File $file
      * @return $this
      */
-    public function ofFile(File $file): self {
+    public function inFile(File $file): self {
 
-        $this->ofFile = $file;
+        $this->inFile = $file;
         return $this;
     }
 
@@ -78,47 +71,47 @@ class Report {
      * @param  int $line
      * @return $this
      */
-    public function ofLine(int $line): self {
+    public function inLine(int $line): self {
 
-        $this->ofLine = $line;
+        $this->inLine = $line;
         return $this;
     }
 
     /**
-     * @return array
+     * @return \Angelej\PhpInsider\Sinks\Sink[]
      */
     public function get(): array {
 
         $result = [];
 
-        foreach($this->reports as $report){
+        foreach($this->reports as $sink){
 
-            if($this->ofFile && $report['file'] !== $this->ofFile){
+            if($this->inFile && $sink->getLocation()->getFile() !== $this->inFile){
                 continue;
             }
 
-            if($this->ofSink && get_class($report['sink']) !== $this->ofSink){
+            if($this->ofSink && get_class($sink) !== $this->ofSink){
                 continue;
             }
 
-            if($this->ofLine && $report['node']->getLine() !== $this->ofLine){
+            if($this->inLine && $sink->getLocation()->getLine() !== $this->inLine){
                 continue;
             }
-            $result[] = $report;
+            $result[] = $sink;
         }
 
         // reset criteria
-        $this->ofFile = null;
-        $this->ofLine = null;
+        $this->inFile = null;
+        $this->inLine = null;
         $this->ofSink = null;
 
         return $result;
     }
 
     /**
-     * @return array|null
+     * @return \Angelej\PhpInsider\Sinks\Sink|null
      */
-    public function first(): ?array {
+    public function first(): ?Sink {
 
         return $this->get()[0] ?? null;
     }
