@@ -10,6 +10,7 @@ use Angelej\PhpInsider\Sinks\CodeExecution\SystemSink;
 use Angelej\PhpInsider\Sinks\FileInclusion\IncludeSink;
 use Angelej\PhpInsider\Sinks\CodeExecution\BacktickSink;
 use Angelej\PhpInsider\Sinks\CodeExecution\PassthruSink;
+use Angelej\PhpInsider\Sinks\CodeExecution\ShellExecSink;
 
 class SinkDetector extends NodeVisitorAbstract {
 
@@ -22,7 +23,8 @@ class SinkDetector extends NodeVisitorAbstract {
         ExecSink::class,
         SystemSink::class,
         IncludeSink::class,
-        PassthruSink::class
+        PassthruSink::class,
+        ShellExecSink::class
     ];
 
     /**
