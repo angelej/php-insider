@@ -28,4 +28,4 @@ jobs:
               run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
             - name: Execute tests
-              run: ./vendor/bin/pest
+              run: composer test
