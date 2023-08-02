@@ -2,12 +2,12 @@
 
 it('executes binary', function(){
 
-    exec('./bin/insider analyse tests/files/CodeExecution.php', $output, $resultCode);
+    exec('./bin/insider analyse tests/Unit/files/EvalFile.php', $output, $resultCode);
     expect($resultCode)
         ->toBeInt()
         ->toBe(0);
 
-    exec('./bin/insider analyse tests/files --exclude-file=tests/files/CodeExecution.php', $output, $resultCode);
+    exec('./bin/insider analyse tests/Unit/files --exclude-file=tests/Unit/files/EvalFile.php', $output, $resultCode);
     expect($resultCode)
         ->toBeInt()
         ->toBe(0);

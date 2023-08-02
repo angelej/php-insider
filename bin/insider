@@ -28,13 +28,13 @@ $app->register('analyse')
         $files = is_dir($file) ? File::glob($file, $extensions, $excludedFiles) : new File($file);
         $report = (new Analyser())->analyse($files);
 
-        foreach($report->get() as $item){
+        foreach($report->get() as $sink){
 
-            $line = $item['node']->getLine();
-            $filePath = $item['file']->getRealPath();
-            $sink = (new ReflectionClass($item['sink']))->getShortName();
+            $line = $sink->getLocation()->getLine();
+            $filePath = $sink->getLocation()->getPathname();
+            $sinkName = (new ReflectionClass($sink))->getShortName();
 
-            $output->writeln('[!] Found '. $sink . ' sink in file ' . $filePath . ':' . $line);
+            $output->writeln('[!] Found '. $sinkName . ' sink in file ' . $filePath . ':' . $line);
         }
         return Command::SUCCESS;
     });
