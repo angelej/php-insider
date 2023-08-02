@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Angelej\PhpInsider\File;
 use Angelej\PhpInsider\Analyser;
