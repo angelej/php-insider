@@ -5,6 +5,7 @@ namespace Angelej\PhpInsider;
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 use Angelej\PhpInsider\Sinks\FileRead\FileSink;
+use Angelej\PhpInsider\Sinks\FileWrite\CopySink;
 use Angelej\PhpInsider\Sinks\FileRead\ReadfileSink;
 use Angelej\PhpInsider\Sinks\CodeExecution\EvalSink;
 use Angelej\PhpInsider\Sinks\CodeExecution\ExecSink;
@@ -32,7 +33,8 @@ class SinkDetector extends NodeVisitorAbstract {
         FileGetContentsSink::class,
         FileSink::class,
         ReadfileSink::class,
-        FilePutContentsSink::class
+        FilePutContentsSink::class,
+        CopySink::class
     ];
 
     /**
