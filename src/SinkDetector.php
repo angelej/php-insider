@@ -11,6 +11,7 @@ use Angelej\PhpInsider\Sinks\FileInclusion\IncludeSink;
 use Angelej\PhpInsider\Sinks\CodeExecution\BacktickSink;
 use Angelej\PhpInsider\Sinks\CodeExecution\PassthruSink;
 use Angelej\PhpInsider\Sinks\CodeExecution\ShellExecSink;
+use Angelej\PhpInsider\Sinks\FileRead\FileGetContentsSink;
 
 class SinkDetector extends NodeVisitorAbstract {
 
@@ -24,7 +25,8 @@ class SinkDetector extends NodeVisitorAbstract {
         SystemSink::class,
         IncludeSink::class,
         PassthruSink::class,
-        ShellExecSink::class
+        ShellExecSink::class,
+        FileGetContentsSink::class
     ];
 
     /**
