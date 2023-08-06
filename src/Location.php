@@ -3,6 +3,7 @@
 namespace Angelej\PhpInsider;
 
 use PhpParser\Node;
+use const PHP_EOL;
 
 class Location {
 
@@ -29,7 +30,7 @@ class Location {
      */
     public function getPathname(): string {
 
-        return $this->file->getRealPath();
+        return $this->file->getPathname();
     }
 
     /**
@@ -46,6 +47,44 @@ class Location {
     public function getFile(): File {
 
         return $this->file;
+    }
+
+    /**
+     * @param  int $expand
+     * @return string
+     */
+    public function getCodeSnippet(int $expand = 0): string {
+
+        $snippet = '';
+        $fp = @fopen('file://' . $this->file->getRealPath(), 'r');
+
+        if($fp){
+
+            $start = max($this->node->getStartLine() - $expand, 1);
+            $end = $this->node->getEndLine() + $expand;
+            $line = 1;
+
+            while(!feof($fp)){
+
+                if($line > $end) break;
+
+                $buffer = fgets($fp);
+
+                if($line >= $start){
+
+                    /**
+                     * workaround for termwind's extra space elimination
+                     */
+                    if(!trim($snippet) && !trim($buffer)){
+                        $buffer = '// empty line' . PHP_EOL;
+                    }
+                    $snippet .= $buffer;
+                }
+                $line++;
+            }
+            fclose($fp);
+        }
+        return $snippet;
     }
 
     /**
