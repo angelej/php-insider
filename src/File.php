@@ -30,12 +30,15 @@ class File {
     public function getContent(): string {
 
         $content = '';
-        $fp = @fopen('file://' . $this->getRealPath(), 'r');
 
-        if($fp){
+        if($this->file->getSize() > 0){
+            $fp = @fopen('file://' . $this->file->getRealPath(), 'r');
 
-            $content = fread($fp, $this->getSize());
-            fclose($fp);
+            if($fp){
+
+                $content = fread($fp, $this->file->getSize());
+                fclose($fp);
+            }
         }
         return $content;
     }
