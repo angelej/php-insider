@@ -2,26 +2,26 @@
 
 namespace Angelej\PhpInsider;
 
-use SplFileObject;
+use SplFileInfo;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 
 /**
- * @mixin \SplFileObject
+ * @mixin \SplFileInfo
  */
 class File {
 
     /**
-     * @var \SplFileObject
+     * @var \SplFileInfo
      */
-    protected SplFileObject $file;
+    protected SplFileInfo $file;
 
     /**
      * @param  string $path
      */
     public function __construct(string $path){
 
-        $this->file = new SplFileObject($path);
+        $this->file = new SplFileInfo($path);
     }
 
     /**
@@ -29,7 +29,15 @@ class File {
      */
     public function getContent(): string {
 
-        return $this->fread($this->getSize());
+        $content = '';
+        $fp = @fopen('file://' . $this->getRealPath(), 'r');
+
+        if($fp){
+
+            $content = fread($fp, $this->getSize());
+            fclose($fp);
+        }
+        return $content;
     }
 
 
