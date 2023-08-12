@@ -3,6 +3,7 @@
 namespace Angelej\PhpInsider;
 
 use PhpParser\Node;
+use PhpParser\Node\Stmt\Class_;
 use const PHP_EOL;
 
 class Location {
@@ -16,6 +17,11 @@ class Location {
      * @var \PhpParser\Node|null
      */
     private ?Node $node;
+
+    /**
+     * @var \PhpParser\Node\Stmt\Class_|null
+     */
+    private ?Class_ $classNode;
 
     /**
      * @param  \Angelej\PhpInsider\File $file
@@ -47,6 +53,14 @@ class Location {
     public function getFile(): File {
 
         return $this->file;
+    }
+
+    /**
+     * @return \PhpParser\Node\Stmt\Class_|null
+     */
+    public function getClassNode(): ?Class_ {
+
+        return $this->classNode;
     }
 
     /**
@@ -95,6 +109,7 @@ class Location {
 
         $this->file = $file;
         $this->node = null;
+        $this->classNode = null;
         return $this;
     }
 
@@ -105,6 +120,21 @@ class Location {
     public function setNode(Node $node): self {
 
         $this->node = $node;
+
+        if($node instanceof Class_){
+
+            $this->classNode = $node;
+        }
+        return $this;
+    }
+
+    /**
+     * @param  \PhpParser\Node\Stmt\Class_|null $node
+     * @return $this
+     */
+    public function setClassNode(?Class_ $node): self {
+
+        $this->classNode = $node;
         return $this;
     }
 }

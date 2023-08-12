@@ -2,6 +2,7 @@
 
 namespace Angelej\PhpInsider\Sinks;
 
+use ReflectionClass;
 use Angelej\PhpInsider\Location;
 
 abstract class Sink implements SinkInterface {
@@ -25,5 +26,13 @@ abstract class Sink implements SinkInterface {
     public function getLocation(): Location {
 
         return $this->location;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSinkName(): string {
+
+        return (new ReflectionClass($this))->getShortName();
     }
 }
