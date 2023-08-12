@@ -71,6 +71,19 @@ class SinkDetector extends NodeVisitorAbstract {
     }
 
     /**
+     * @param  \PhpParser\Node $node
+     * @return void
+     */
+    public function leaveNode(Node $node): void {
+
+        // leave class
+        if($this->currentLocation->getClassNode() === $node){
+
+            $this->currentLocation->setClassNode(null);
+        }
+    }
+
+    /**
      * @param  \Angelej\PhpInsider\Location $location
      * @return $this
      */

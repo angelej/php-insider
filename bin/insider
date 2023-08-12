@@ -33,15 +33,17 @@ $app->register('analyse')
 
         foreach($report->get() as $sink){
 
-            $line = $sink->getLocation()->getLine();
+            $location = $sink->getLocation();
+            $classNode = $location->getClassNode();
+            $line = $location->getLine();
             $startLine = max($line - $expandLines, 1);
-            $filePath = $sink->getLocation()->getPathname();
-            $sinkName = (new ReflectionClass($sink))->getShortName();
-            $codeSnippet = $sink->getLocation()->getCodeSnippet($expandLines);
+            $codeSnippet = $location->getCodeSnippet($expandLines);
+            $classHtml = $classNode ? "<span>(class: <em>{$classNode?->name}</em>)</span>" : '';
 
             render(<<<TERMWIND
                 <div class="ml-2 mb-1">
-                    <span class="px-1 font-bold bg-red-600 text-black">{$sinkName}</span> found in file {$filePath}
+                    <span class="px-1 font-bold bg-red-600 text-black">{$sink->getSinkName()}</span> found in file {$location->getPathname()}
+                    {$classHtml}
                     <code line="{$line}" start-line="{$startLine}">{$codeSnippet}</code>
                 </div>
             TERMWIND);
