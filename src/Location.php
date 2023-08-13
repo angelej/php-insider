@@ -4,6 +4,8 @@ namespace Angelej\PhpInsider;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Function_;
+use PhpParser\Node\Stmt\ClassMethod;
 use const PHP_EOL;
 
 class Location {
@@ -16,12 +18,22 @@ class Location {
     /**
      * @var \PhpParser\Node|null
      */
-    private ?Node $node;
+    private ?Node $node = null;
 
     /**
      * @var \PhpParser\Node\Stmt\Class_|null
      */
-    private ?Class_ $classNode;
+    private ?Class_ $classNode = null;
+
+    /**
+     * @var \PhpParser\Node\Stmt\ClassMethod|null
+     */
+    private ?ClassMethod $methodNode = null;
+
+    /**
+     * @var \PhpParser\Node\Stmt\Function_|null
+     */
+    private ?Function_ $functionNode = null;
 
     /**
      * @param  \Angelej\PhpInsider\File $file
@@ -61,6 +73,22 @@ class Location {
     public function getClassNode(): ?Class_ {
 
         return $this->classNode;
+    }
+
+    /**
+     * @return \PhpParser\Node\Stmt\ClassMethod|null
+     */
+    public function getMethodNode(): ?ClassMethod {
+
+        return $this->methodNode;
+    }
+
+    /**
+     * @return \PhpParser\Node\Stmt\Function_|null
+     */
+    public function getFunctionNode(): ?Function_ {
+
+        return $this->functionNode;
     }
 
     /**
@@ -110,6 +138,8 @@ class Location {
         $this->file = $file;
         $this->node = null;
         $this->classNode = null;
+        $this->methodNode = null;
+        $this->functionNode = null;
         return $this;
     }
 
@@ -121,9 +151,18 @@ class Location {
 
         $this->node = $node;
 
-        if($node instanceof Class_){
+        switch(true){
+            case $node instanceof Class_:
+                $this->setClassNode($node);
+                break;
 
-            $this->classNode = $node;
+            case $node instanceof ClassMethod:
+                $this->setMethodNode($node);
+                break;
+
+            case $node instanceof Function_:
+                $this->setFunctionNode($node);
+                break;
         }
         return $this;
     }
@@ -135,6 +174,28 @@ class Location {
     public function setClassNode(?Class_ $node): self {
 
         $this->classNode = $node;
+        $this->methodNode = null;
+        $this->functionNode = null;
+        return $this;
+    }
+
+    /**
+     * @param  \PhpParser\Node\Stmt\ClassMethod|null $node
+     * @return $this
+     */
+    public function setMethodNode(?ClassMethod $node): self {
+
+        $this->methodNode = $node;
+        return $this;
+    }
+
+    /**
+     * @param  \PhpParser\Node\Stmt\Function_|null $node
+     * @return $this
+     */
+    public function setFunctionNode(?Function_ $node): self {
+
+        $this->functionNode = $node;
         return $this;
     }
 }
