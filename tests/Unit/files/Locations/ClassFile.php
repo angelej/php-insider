@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-class ClassTest {
+class ClassFile {
 
     public function exec(string $cmd): void {
 

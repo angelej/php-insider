@@ -6,7 +6,7 @@ use Angelej\PhpInsider\Analyser;
 
 it('locates "class" tokens', function(){
 
-    $file = new File(__DIR__ . '/../files/Locations/ClassTest.php');
+    $file = new File(__DIR__ . '/../files/Locations/ClassFile.php');
     $sinks = (new Analyser())->analyse($file);
     $classNode = $sinks->inFile($file)
         ->inLine(7)
@@ -17,5 +17,5 @@ it('locates "class" tokens', function(){
     expect($classNode)
         ->toBeInstanceOf(Class_::class)
         ->and((string) $classNode?->name)
-        ->toBe('ClassTest');
+        ->toBe('ClassFile');
 });

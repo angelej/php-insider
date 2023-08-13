@@ -76,10 +76,21 @@ class SinkDetector extends NodeVisitorAbstract {
      */
     public function leaveNode(Node $node): void {
 
-        // leave class
-        if($this->currentLocation->getClassNode() === $node){
+        switch(true){
+            // leave class node
+            case $this->currentLocation->getClassNode() === $node:
+                $this->currentLocation->setClassNode(null);
+                break;
 
-            $this->currentLocation->setClassNode(null);
+            // leave method node
+            case $this->currentLocation->getMethodNode() === $node:
+                $this->currentLocation->setMethodNode(null);
+                break;
+
+            // leave function node
+            case $this->currentLocation->getFunctionNode() === $node:
+                $this->currentLocation->setFunctionNode(null);
+                break;
         }
     }
 
