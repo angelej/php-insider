@@ -6,7 +6,7 @@ on: [push, pull_request]
 jobs:
     phpstan:
         runs-on: ubuntu-latest
-        name: PHPStan - Static Code Analysis
+        name: PHP 8.1 - ubuntu-latest
 
         steps:
             - name: Checkout code
