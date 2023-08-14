@@ -1,4 +1,4 @@
-name: Tests
+name: Unit Tests
 
 on: [push, pull_request]
 
@@ -11,7 +11,7 @@ jobs:
                 os: [ubuntu-latest]
                 php: [8.2, 8.1]
 
-        name: P${{ matrix.php }} - ${{ matrix.os }}
+        name: PHP ${{ matrix.php }} - ${{ matrix.os }}
 
         steps:
             - name: Checkout code

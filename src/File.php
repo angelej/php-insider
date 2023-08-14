@@ -46,8 +46,8 @@ class File {
 
     /**
      * @param  string $location
-     * @param  array $extensions
-     * @param  array $excludedLocations
+     * @param  string[] $extensions
+     * @param  string[] $excludedLocations
      * @return array|\Angelej\PhpInsider\File[]
      */
     public static function glob(string $location, array $extensions = ['php'], array $excludedLocations = []): array {
@@ -88,7 +88,7 @@ class File {
 
     /**
      * @param  string $name
-     * @param  array $arguments
+     * @param  mixed[] $arguments
      * @return mixed
      */
     public function __call(string $name, array $arguments): mixed {

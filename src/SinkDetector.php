@@ -54,9 +54,9 @@ class SinkDetector extends NodeVisitorAbstract {
 
     /**
      * @param  \PhpParser\Node $node
-     * @return void
+     * @return \PhpParser\Node
      */
-    public function enterNode(Node $node): void {
+    public function enterNode(Node $node): Node {
 
         $this->currentLocation->setNode($node);
 
@@ -68,13 +68,14 @@ class SinkDetector extends NodeVisitorAbstract {
                 $this->report->add($sink);
             }
         }
+        return $node;
     }
 
     /**
      * @param  \PhpParser\Node $node
-     * @return void
+     * @return \PhpParser\Node
      */
-    public function leaveNode(Node $node): void {
+    public function leaveNode(Node $node): Node {
 
         switch(true){
             // leave class node
@@ -92,6 +93,7 @@ class SinkDetector extends NodeVisitorAbstract {
                 $this->currentLocation->setFunctionNode(null);
                 break;
         }
+        return $node;
     }
 
     /**

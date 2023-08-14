@@ -13,7 +13,8 @@
         "nunomaduro/termwind": "^1.15"
     },
     "require-dev": {
-        "pestphp/pest": "^2.9"
+        "pestphp/pest": "^2.9",
+        "phpstan/phpstan": "^1.10"
     },
     "autoload": {
         "psr-4": {
