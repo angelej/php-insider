@@ -4,7 +4,7 @@ namespace Angelej\PhpInsider;
 
 use Angelej\PhpInsider\Sinks\Sink;
 
-class Report {
+final class Report {
 
     /**
      * @var \Angelej\PhpInsider\Report|null
