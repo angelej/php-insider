@@ -1,0 +1,25 @@
+
+name: Static Code Analysis
+
+on: [push, pull_request]
+
+jobs:
+    phpstan:
+        runs-on: ubuntu-latest
+        name: PHPStan - Static Code Analysis
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.1
+                  extensions: tokenizer
+
+            - name: Install dependencies
+              run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+            - name: Run PHPStan
+              run: ./vendor/bin/phpstan analyse --no-progress
