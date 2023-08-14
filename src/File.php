@@ -81,7 +81,7 @@ class File {
 
                 if(str_starts_with($realPath, $excludedPath)) continue 2;
             }
-            $files[] = new File($realPath);
+            $files[] = new File($file->getPathname());
         }
         return $files;
     }

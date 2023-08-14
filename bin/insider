@@ -5,6 +5,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Angelej\PhpInsider\File;
 use Angelej\PhpInsider\Analyser;
+use Angelej\PhpInsider\LocationHelper;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -34,16 +35,14 @@ $app->register('analyse')
         foreach($report->get() as $sink){
 
             $location = $sink->getLocation();
-            $classNode = $location->getClassNode();
             $line = $location->getLine();
             $startLine = max($line - $expandLines, 1);
             $codeSnippet = $location->getCodeSnippet($expandLines);
-            $classHtml = $classNode ? "<span>(class: <em>{$classNode?->name}</em>)</span>" : '';
+            $breadcrumb = LocationHelper::printBreadcrumb($location);
 
             render(<<<TERMWIND
                 <div class="ml-2 mb-1">
-                    <span class="px-1 font-bold bg-red-600 text-black">{$sink->getSinkName()}</span> found in file {$location->getPathname()}
-                    {$classHtml}
+                    <span class="px-1 font-bold bg-red-600 text-black">{$sink->getSinkName()}</span> found in file {$breadcrumb}
                     <code line="{$line}" start-line="{$startLine}">{$codeSnippet}</code>
                 </div>
             TERMWIND);
