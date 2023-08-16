@@ -30,9 +30,10 @@ $app->register('analyse')
         $file = $input->getArgument('file');
         $files = is_dir($file) ? File::glob($file, $extensions, $excludedFiles) : new File($file);
         $report = (new Analyser())->analyse($files);
+        $sinks = $report->get();
         $expandLines = max((int) $input->getOption('lines'), 0);
 
-        foreach($report->get() as $sink){
+        foreach($sinks as $sink){
 
             $location = $sink->getLocation();
             $line = $location->getLine();
@@ -47,6 +48,14 @@ $app->register('analyse')
                 </div>
             TERMWIND);
         }
+
+        $totalSinks = count($sinks);
+        $noun = $totalSinks === 1 ? 'sink' : 'sinks';
+        render(<<<TERMWIND
+            <div class="ml-2 mt-1 font-bold">
+                <span class="bg-white text-black px-1">Summary:</span> {$totalSinks} {$noun} found
+            </div>
+        TERMWIND);
         return Command::SUCCESS;
     });
 $app->run();
