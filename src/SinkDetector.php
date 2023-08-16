@@ -9,6 +9,7 @@ use Angelej\PhpInsider\Sinks\FileWrite\CopySink;
 use Angelej\PhpInsider\Sinks\FileRead\ReadfileSink;
 use Angelej\PhpInsider\Sinks\CodeExecution\EvalSink;
 use Angelej\PhpInsider\Sinks\CodeExecution\ExecSink;
+use Angelej\PhpInsider\Sinks\CodeExecution\PopenSink;
 use Angelej\PhpInsider\Sinks\CodeExecution\SystemSink;
 use Angelej\PhpInsider\Sinks\FileInclusion\IncludeSink;
 use Angelej\PhpInsider\Sinks\CodeExecution\BacktickSink;
@@ -34,7 +35,8 @@ class SinkDetector extends NodeVisitorAbstract {
         FileSink::class,
         ReadfileSink::class,
         FilePutContentsSink::class,
-        CopySink::class
+        CopySink::class,
+        PopenSink::class
     ];
 
     /**
