@@ -5,10 +5,10 @@ it('executes binary', function(){
     exec('./bin/insider analyse tests/Unit/files/EvalFile.php', $output, $resultCode);
     expect($resultCode)
         ->toBeInt()
-        ->toBe(0);
+        ->toBe(1);
 
-    exec('./bin/insider analyse tests/Unit/files --exclude-file=tests/Unit/files/EvalFile.php', $output, $resultCode);
+    exec('./bin/insider analyze tests/Unit/files --exclude-file=tests/Unit/files/EvalFile.php', $output, $resultCode);
     expect($resultCode)
         ->toBeInt()
-        ->toBe(0);
+        ->toBe(1);
 });

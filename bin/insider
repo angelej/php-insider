@@ -3,59 +3,11 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Angelej\PhpInsider\File;
-use Angelej\PhpInsider\Analyser;
-use Angelej\PhpInsider\LocationHelper;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use function Termwind\{render};
+use Angelej\PhpInsider\Commands\AnalyseCommand;
 
 $app = new Application();
-$app->register('analyse')
-    ->addArgument('file', InputArgument::REQUIRED, 'File or directory path to analyse')
-    ->addOption('extension', '-e', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'File extension', ['php'])
-    ->addOption('exclude-file', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'File or directory to exclude', [])
-    ->addOption('lines', '-l', InputOption::VALUE_REQUIRED, 'Number of lines to expand code snippet', 2)
-    ->setCode(function(InputInterface $input, OutputInterface $output): int {
-
-        $extensions = array_map(function($ext){
-            return ltrim(trim($ext), '.');
-        }, $input->getOption('extension'));
-
-        $excludedFiles = $input->getOption('exclude-file');
-        $file = $input->getArgument('file');
-        $files = is_dir($file) ? File::glob($file, $extensions, $excludedFiles) : new File($file);
-        $report = (new Analyser())->analyse($files);
-        $sinks = $report->get();
-        $expandLines = max((int) $input->getOption('lines'), 0);
-
-        foreach($sinks as $sink){
-
-            $location = $sink->getLocation();
-            $line = $location->getLine();
-            $startLine = max($line - $expandLines, 1);
-            $codeSnippet = $location->getCodeSnippet($expandLines);
-            $breadcrumb = LocationHelper::printBreadcrumb($location);
-
-            render(<<<TERMWIND
-                <div class="ml-2 mb-1">
-                    <span class="px-1 font-bold bg-red-600 text-black">{$sink->getSinkName()}</span> found in file {$breadcrumb}
-                    <code line="{$line}" start-line="{$startLine}">{$codeSnippet}</code>
-                </div>
-            TERMWIND);
-        }
-
-        $totalSinks = count($sinks);
-        $noun = $totalSinks === 1 ? 'sink' : 'sinks';
-        render(<<<TERMWIND
-            <div class="ml-2 mt-1 font-bold">
-                <span class="bg-white text-black px-1">Summary:</span> {$totalSinks} {$noun} found
-            </div>
-        TERMWIND);
-        return Command::SUCCESS;
-    });
+$command = new AnalyseCommand();
+$app->add($command);
+$app->setDefaultCommand($command->getName());
 $app->run();

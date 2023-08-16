@@ -97,6 +97,7 @@ class Location {
      */
     public function getCodeSnippet(int $expand = 0): string {
 
+        $expand = max($expand, 0);
         $snippet = '';
         $fp = @fopen('file://' . $this->file->getRealPath(), 'r');
 
