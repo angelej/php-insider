@@ -16,6 +16,7 @@ class SinkDetector extends NodeVisitorAbstract {
         Sinks\CodeExecution\EvalSink::class,
         Sinks\CodeExecution\ExecSink::class,
         Sinks\CodeExecution\PassthruSink::class,
+        Sinks\CodeExecution\PcntlExecSink::class,
         Sinks\CodeExecution\PopenSink::class,
         Sinks\CodeExecution\ProcOpenSink::class,
         Sinks\CodeExecution\ShellExecSink::class,
