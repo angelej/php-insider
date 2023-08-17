@@ -26,7 +26,8 @@ class SinkDetector extends NodeVisitorAbstract {
         Sinks\FileRead\FileSink::class,
         Sinks\FileRead\ReadfileSink::class,
         Sinks\FileWrite\CopySink::class,
-        Sinks\FileWrite\FilePutContentsSink::class
+        Sinks\FileWrite\FilePutContentsSink::class,
+        Sinks\InformationDisclosure\PhpinfoSink::class
     ];
 
     /**

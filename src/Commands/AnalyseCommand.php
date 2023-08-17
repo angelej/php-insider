@@ -69,7 +69,7 @@ class AnalyseCommand extends Command {
             $location = $sink->getLocation();
             $line = $location->getLine();
             $startLine = max($line - $expandLines, 1);
-            $codeSnippet = $location->getCodeSnippet($expandLines);
+            $codeSnippet = htmlentities($location->getCodeSnippet($expandLines));
             $breadcrumb = LocationHelper::printBreadcrumb($location);
 
             render(<<<INSIDER_SINK
