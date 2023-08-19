@@ -1,8 +1,22 @@
 # PHP-Insider
+[![Unit Tests](https://github.com/angelej/php-insider/actions/workflows/tests.yml/badge.svg)](https://github.com/angelej/php-insider/actions/workflows/tests.yml)
+
 PHP-Insider is a static application security testing tool (SAST), which is specialized in finding dangerous sinks.
 It's not designed to be a fully-automated tool for identifying vulnerabilities, but rather an aid for analysts finding them.
 
 > **Warning!** This repository is currently under development and may contain breaking changes.
+
+## Installation
+This tool requires `php ^8.1`, `ext-dom`, `ext-tokenizer` and `composer`.
+1. Clone repository
+    ```shell
+    git clone https://github.com/angelej/php-insider.git
+    cd php-insider
+    ```
+2. Install dependencies
+    ```shell
+    composer install
+    ```
 
 ## Basic Usage
 ```shell
