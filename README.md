@@ -7,7 +7,7 @@ It's not designed to be a fully-automated tool for identifying vulnerabilities, 
 > **Warning!** This repository is currently under development and may contain breaking changes.
 
 ## Installation
-This tool requires `php ^8.1`, `ext-dom`, `ext-simplexml`, `ext-tokenizer`, `ext-xml`, `ext-xmlwriter`, and `composer`.
+If this tool is used without docker, you have to install `php ^8.1`, `ext-dom`, `ext-simplexml`, `ext-tokenizer`, `ext-xml`, `ext-xmlwriter`, and `composer`.
 1. Clone repository
     ```shell
     git clone https://github.com/angelej/php-insider.git
@@ -19,8 +19,23 @@ This tool requires `php ^8.1`, `ext-dom`, `ext-simplexml`, `ext-tokenizer`, `ext
     ```
 
 ## Basic Usage
+### Without using Docker
 ```shell
-insider@linux:~$ ./bin/insider analyse src/
+insider@linux:~$ ./bin/insider analyse /path/to/app
+   ExecSink  found in file src/Command.php › Ⓒ Command › ⓜ execute 
+        5▕     public function execute(string $cmd){
+        6▕ 
+    ➜   7▕         return exec($cmd);
+        8▕     }
+        9▕ }
+
+
+   Summary:  1 sink found
+```
+
+### Using Docker
+```shell
+insider@linux:~$ docker run --rm -it -v /path/to/app:/app angelej/php-insider:latest analyse /app/src
    ExecSink  found in file src/Command.php › Ⓒ Command › ⓜ execute 
         5▕     public function execute(string $cmd){
         6▕ 
