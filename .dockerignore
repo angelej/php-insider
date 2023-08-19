@@ -1,0 +1,9 @@
+/.github
+/tests
+/vendor
+/.dockerignore
+/.gitignore
+/.gitattributes
+/Dockerfile
+/phpstan.neon.dist
+/phpunit.xml
