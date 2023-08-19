@@ -44,6 +44,7 @@ insider@linux:~$ ./bin/insider analyse src/
 ### File Write
 - [`copy()`](https://www.php.net/manual/en/function.copy)
 - [`file_put_contents()`](https://www.php.net/manual/en/function.file-put-contents)
+- [`move_uploaded_file()`](https://www.php.net/manual/de/function.move-uploaded-file)
 
 ### Information Disclosure
 - [`phpinfo()`](https://www.php.net/manual/en/function.phpinfo)
