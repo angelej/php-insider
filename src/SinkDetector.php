@@ -41,6 +41,9 @@ class SinkDetector extends NodeVisitorAbstract {
      */
     protected Report $report;
 
+    /** @var int */
+    protected int $level = 0;
+
     public function __construct(){
 
         $this->report = Report::getInstance();
@@ -56,7 +59,9 @@ class SinkDetector extends NodeVisitorAbstract {
 
         foreach($this->sinks as $sinkName){
 
-            if($sinkName::is($node)){
+            $level = $sinkName::is($node);
+
+            if($level instanceof Level && $level->value >= $this->level){
 
                 $sink = new $sinkName(clone $this->currentLocation);
                 $this->report->add($sink);
@@ -97,6 +102,16 @@ class SinkDetector extends NodeVisitorAbstract {
     public function setLocation(Location $location): self {
 
         $this->currentLocation = $location;
+        return $this;
+    }
+
+    /**
+     * @param  int $level
+     * @return $this
+     */
+    public function setLevel(int $level): self {
+
+        $this->level = $level;
         return $this;
     }
 }

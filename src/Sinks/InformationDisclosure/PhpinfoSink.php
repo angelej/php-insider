@@ -3,6 +3,7 @@
 namespace Angelej\PhpInsider\Sinks\InformationDisclosure;
 
 use PhpParser\Node;
+use Angelej\PhpInsider\Level;
 use Angelej\PhpInsider\Sinks\Sink;
 use Angelej\PhpInsider\NodeHelper;
 
@@ -10,10 +11,16 @@ class PhpinfoSink extends Sink {
 
     /**
      * @param  \PhpParser\Node $node
-     * @return bool
+     * @return \Angelej\PhpInsider\Level|null
      */
-    public static function is(Node $node): bool {
+    public static function is(Node $node): ?Level {
 
-        return NodeHelper::isFunctionCall($node, 'phpinfo');
+        $level = null;
+
+        if(NodeHelper::isFunctionCall($node, 'phpinfo')){
+
+            $level = Level::max();
+        }
+        return $level;
     }
 }
