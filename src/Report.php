@@ -26,6 +26,9 @@ final class Report {
      */
     private ?int $inLine = null;
 
+    /** @var \Angelej\PhpInsider\Level|null */
+    private ?Level $ofLevel = null;
+
     /**
      * @var \Angelej\PhpInsider\Sinks\Sink[]
      */
@@ -68,6 +71,16 @@ final class Report {
     }
 
     /**
+     * @param  \Angelej\PhpInsider\Level $level
+     * @return self
+     */
+    public function ofLevel(Level $level): self {
+
+        $this->ofLevel = $level;
+        return $this;
+    }
+
+    /**
      * @param  int $line
      * @return $this
      */
@@ -97,6 +110,10 @@ final class Report {
             if($this->inLine && $sink->getLocation()->getLine() !== $this->inLine){
                 continue;
             }
+
+            if($this->ofLevel && $sink->getLevel() !== $this->ofLevel){
+                continue;
+            }
             $result[] = $sink;
         }
 
@@ -104,6 +121,7 @@ final class Report {
         $this->inFile = null;
         $this->inLine = null;
         $this->ofSink = null;
+        $this->ofLevel = null;
 
         return $result;
     }

@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Angelej\PhpInsider\File;
+use Angelej\PhpInsider\Level;
 use Angelej\PhpInsider\Analyser;
 use Angelej\PhpInsider\Sinks\CodeExecution\PcntlExecSink;
 
@@ -11,11 +12,13 @@ it('detects "pcntl_exec()" tokens (code execution)', function(){
 
     expect($sinks->inFile($file)
         ->inLine(5)
+        ->ofLevel(Level::ONE)
         ->first()
     )->toBeInstanceOf(PcntlExecSink::class);
 
     expect($sinks->inFile($file)
         ->inLine(6)
+        ->ofLevel(Level::ZERO)
         ->first()
-    )->toBeNull();
+    )->toBeInstanceOf(PcntlExecSink::class);
 });
