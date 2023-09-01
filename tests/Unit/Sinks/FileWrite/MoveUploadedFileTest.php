@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Angelej\PhpInsider\File;
+use Angelej\PhpInsider\Level;
 use Angelej\PhpInsider\Analyser;
 use Angelej\PhpInsider\Sinks\FileWrite\MoveUploadedFileSink;
 
@@ -11,21 +12,25 @@ it('detects "move_uploaded_file()" tokens (file write)', function(){
 
     expect($sinks->inFile($file)
         ->inLine(5)
+        ->ofLevel(Level::ONE)
         ->first()
     )->toBeInstanceOf(MoveUploadedFileSink::class);
 
     expect($sinks->inFile($file)
         ->inLine(6)
+        ->ofLevel(Level::ONE)
         ->first()
     )->toBeInstanceOf(MoveUploadedFileSink::class);
 
     expect($sinks->inFile($file)
         ->inLine(7)
+        ->ofLevel(Level::ONE)
         ->first()
     )->toBeInstanceOf(MoveUploadedFileSink::class);
 
     expect($sinks->inFile($file)
         ->inLine(8)
+        ->ofLevel(Level::ZERO)
         ->first()
-    )->toBeNull();
+    )->toBeInstanceOf(MoveUploadedFileSink::class);
 });

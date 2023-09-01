@@ -3,6 +3,7 @@
 namespace Angelej\PhpInsider\Sinks\FileWrite;
 
 use PhpParser\Node;
+use Angelej\PhpInsider\Level;
 use Angelej\PhpInsider\Sinks\Sink;
 use Angelej\PhpInsider\NodeHelper;
 
@@ -10,12 +11,21 @@ class FilePutContentsSink extends Sink {
 
     /**
      * @param  \PhpParser\Node $node
-     * @return bool
+     * @return \Angelej\PhpInsider\Level|null
      */
-    public static function is(Node $node): bool {
+    public static function is(Node $node): ?Level {
 
-        return NodeHelper::isFunctionCall($node, 'file_put_contents')
-            && (NodeHelper::isDynamic($node->args[0] ?? null)
-                || NodeHelper::isDynamic($node->args[1] ?? null));
+        $level = null;
+
+        if(NodeHelper::isFunctionCall($node, 'file_put_contents')){
+
+            $level = Level::ZERO;
+
+            if(NodeHelper::isDynamic($node->args[0] ?? null)
+                || NodeHelper::isDynamic($node->args[1] ?? null)){
+                $level = Level::ONE;
+            }
+        }
+        return $level;
     }
 }

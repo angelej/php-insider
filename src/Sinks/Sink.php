@@ -3,6 +3,7 @@
 namespace Angelej\PhpInsider\Sinks;
 
 use ReflectionClass;
+use Angelej\PhpInsider\Level;
 use Angelej\PhpInsider\Location;
 
 abstract class Sink implements SinkInterface {
@@ -12,12 +13,17 @@ abstract class Sink implements SinkInterface {
      */
     protected Location $location;
 
+    /** @var \Angelej\PhpInsider\Level */
+    protected Level $level;
+
     /**
      * @param  \Angelej\PhpInsider\Location $location
+     * @param  \Angelej\PhpInsider\Level $level
      */
-    public function __construct(Location $location){
+    public function __construct(Location $location, Level $level){
 
         $this->location = $location;
+        $this->level = $level;
     }
 
     /**
@@ -26,6 +32,12 @@ abstract class Sink implements SinkInterface {
     public function getLocation(): Location {
 
         return $this->location;
+    }
+
+    /** @return \Angelej\PhpInsider\Level */
+    public function getLevel(): Level {
+
+        return $this->level;
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Angelej\PhpInsider\Sinks\FileWrite;
 
 use PhpParser\Node;
+use Angelej\PhpInsider\Level;
 use Angelej\PhpInsider\Sinks\Sink;
 use Angelej\PhpInsider\NodeHelper;
 
@@ -10,11 +11,20 @@ class MoveUploadedFileSink extends Sink {
 
     /**
      * @param  \PhpParser\Node $node
-     * @return bool
+     * @return \Angelej\PhpInsider\Level|null
      */
-    public static function is(Node $node): bool {
+    public static function is(Node $node): ?Level {
 
-        return NodeHelper::isFunctionCall($node, 'move_uploaded_file')
-            && NodeHelper::isDynamic($node);
+        $level = null;
+
+        if(NodeHelper::isFunctionCall($node, 'move_uploaded_file')){
+
+            $level = Level::ZERO;
+
+            if(NodeHelper::isDynamic($node)){
+                $level = Level::ONE;
+            }
+        }
+        return $level;
     }
 }

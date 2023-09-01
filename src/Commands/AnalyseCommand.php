@@ -3,6 +3,7 @@
 namespace Angelej\PhpInsider\Commands;
 
 use Angelej\PhpInsider\File;
+use Angelej\PhpInsider\Level;
 use Angelej\PhpInsider\Analyser;
 use Angelej\PhpInsider\Sinks\Sink;
 use Angelej\PhpInsider\LocationHelper;
@@ -12,6 +13,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Exception\InvalidOptionException;
 use function Termwind\render;
 
 #[AsCommand(
@@ -33,8 +35,11 @@ class AnalyseCommand extends Command {
         $excludedFiles = $input->getOption('exclude-file');
         $files = is_dir($file) ? File::glob($file, $extensions, $excludedFiles) : new File($file);
         $expandLines = max((int) $input->getOption('lines'), 0);
+        $level = $this->getLevelOption($input);
 
-        $report = (new Analyser())->analyse($files);
+        $report = (new Analyser())
+            ->setLevel($level)
+            ->analyse($files);
         $sinks = $report->get();
 
         foreach($sinks as $sink){
@@ -46,6 +51,22 @@ class AnalyseCommand extends Command {
         return count($sinks) > 0
             ? Command::FAILURE
             : Command::SUCCESS;
+    }
+
+    /**
+     * @param  \Symfony\Component\Console\Input\InputInterface $input
+     * @return int
+     */
+    private function getLevelOption(InputInterface $input): int {
+
+        $level = (int) $input->getOption('level');
+        $min = Level::min()->value;
+        $max = Level::max()->value;
+
+        if($level < $min || $level > $max){
+            throw new InvalidOptionException('Invalid "--level" value provided. Level must be between ' . $min . ' and ' . $max . '.');
+        }
+        return $level;
     }
 
     /**
@@ -99,10 +120,14 @@ class AnalyseCommand extends Command {
     /** @return void */
     protected function configure(): void {
 
+        $minLevel = Level::min()->value;
+        $maxLevel = Level::max()->value;
+
         $this
             ->addArgument('file', InputArgument::REQUIRED, 'File or directory path to analyse')
+            ->addOption('level', '-l', InputOption::VALUE_REQUIRED, 'Level of analysis [' . $minLevel . '-' . $maxLevel . ']. The higher the level, the more selective the analysis', 0)
             ->addOption('extension', '-e', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'File extension', ['php'])
             ->addOption('exclude-file', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'File or directory to exclude', [])
-            ->addOption('lines', '-l', InputOption::VALUE_REQUIRED, 'Number of lines to expand code snippet', 2);
+            ->addOption('lines', null, InputOption::VALUE_REQUIRED, 'Number of lines to expand code snippet', 2);
     }
 }

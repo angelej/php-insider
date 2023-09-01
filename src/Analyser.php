@@ -14,6 +14,9 @@ class Analyser {
      */
     protected Parser $parser;
 
+    /** @var int */
+    protected int $level = 0;
+
     public function __construct(){
 
         $this->parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
@@ -28,7 +31,7 @@ class Analyser {
         if(!is_array($files)) $files = [$files];
 
         $traverser = new NodeTraverser();
-        $sinkDetector = new SinkDetector();
+        $sinkDetector = (new SinkDetector())->setLevel($this->level);
         $traverser->addVisitor($sinkDetector);
 
         foreach($files as $file){
@@ -42,5 +45,15 @@ class Analyser {
             } catch(Exception $e){}
         }
         return Report::getInstance();
+    }
+
+    /**
+     * @param  int $level
+     * @return $this
+     */
+    public function setLevel(int $level): self {
+
+        $this->level = $level;
+        return $this;
     }
 }
