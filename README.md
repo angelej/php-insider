@@ -83,6 +83,7 @@ The higher the level, the more selective the analysis.
 - [`copy()`](https://www.php.net/manual/en/function.copy)
 - [`file_put_contents()`](https://www.php.net/manual/en/function.file-put-contents)
 - [`move_uploaded_file()`](https://www.php.net/manual/en/function.move-uploaded-file)
+- [`symlink()`](https://www.php.net/manual/en/function.symlink)
 
 ### Information Disclosure
 - [`phpinfo()`](https://www.php.net/manual/en/function.phpinfo)
