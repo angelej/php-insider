@@ -3,7 +3,6 @@
 namespace Angelej\PhpInsider;
 
 use PhpParser\Node;
-use Angelej\PhpInsider\Sinks;
 use PhpParser\NodeVisitorAbstract;
 
 class SinkDetector extends NodeVisitorAbstract {
@@ -28,6 +27,7 @@ class SinkDetector extends NodeVisitorAbstract {
         Sinks\FileWrite\CopySink::class,
         Sinks\FileWrite\FilePutContentsSink::class,
         Sinks\FileWrite\MoveUploadedFileSink::class,
+        Sinks\FileWrite\SymlinkSink::class,
         Sinks\InformationDisclosure\PhpinfoSink::class
     ];
 
