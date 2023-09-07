@@ -65,6 +65,8 @@ class SinkDetector extends NodeVisitorAbstract {
             if($level instanceof Level && $level->value >= $this->level){
 
                 $sink = new $sinkName(clone $this->currentLocation, $level);
+
+                /** @phpstan-ignore-next-line */
                 $this->report->add($sink);
             }
         }
