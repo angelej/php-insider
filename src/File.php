@@ -36,7 +36,7 @@ class File {
 
             if($fp){
 
-                $content = fread($fp, $this->file->getSize());
+                $content = (string) fread($fp, $this->file->getSize());
                 fclose($fp);
             }
         }
@@ -59,7 +59,10 @@ class File {
             if(is_array($paths = glob($excludedPath))){
 
                 foreach($paths as $path){
-                    $excludedPaths[] = realpath($path);
+
+                    if($realPath = realpath($path)){
+                        $excludedPaths[] = $realPath;
+                    }
                 }
             }
         }, $excludedLocations);

@@ -111,7 +111,7 @@ class Location {
 
                 if($line > $end) break;
 
-                $buffer = fgets($fp);
+                $buffer = (string) fgets($fp);
 
                 if($line >= $start){
 
