@@ -30,6 +30,12 @@ class AnalyseCommand extends Command {
      */
     protected function execute(InputInterface $input, OutputInterface $output): int {
 
+        if($memoryLimit = $input->getOption('memory-limit')){
+            if(ini_set('memory_limit', $memoryLimit) === false){
+                throw new InvalidOptionException('Invalid "--memory-limit" value provided.');
+            }
+        }
+
         $file = $input->getArgument('file');
         $extensions = $this->getExtensionsOption($input);
         $excludedFiles = $input->getOption('exclude-file');
@@ -128,6 +134,7 @@ class AnalyseCommand extends Command {
             ->addOption('level', '-l', InputOption::VALUE_REQUIRED, 'Level of analysis [' . $minLevel . '-' . $maxLevel . ']. The higher the level, the more selective the analysis', 0)
             ->addOption('extension', '-e', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'File extension', ['php'])
             ->addOption('exclude-file', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'File or directory to exclude', [])
-            ->addOption('lines', null, InputOption::VALUE_REQUIRED, 'Number of lines to expand code snippet', 2);
+            ->addOption('lines', null, InputOption::VALUE_REQUIRED, 'Number of lines to expand code snippet', 2)
+            ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit');
     }
 }
