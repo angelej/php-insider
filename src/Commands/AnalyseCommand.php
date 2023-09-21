@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use function Termwind\render;
+use const PHP_EOL;
 
 #[AsCommand(
     name: 'analyse',
@@ -96,7 +97,15 @@ class AnalyseCommand extends Command {
             $location = $sink->getLocation();
             $line = $location->getLine();
             $startLine = max($line - $expandLines, 1);
-            $codeSnippet = htmlentities($location->getCodeSnippet($expandLines));
+            $codeSnippet = $location->getCodeSnippet($expandLines);
+
+            if(!str_starts_with($codeSnippet, '<?')){
+
+                $startLine = max($startLine -1, 1);
+                $codeSnippet = '<?php' . PHP_EOL . $codeSnippet;
+            }
+
+            $codeSnippet = htmlentities($codeSnippet);
             $breadcrumb = LocationHelper::printBreadcrumb($location);
 
             render(<<<INSIDER_SINK
