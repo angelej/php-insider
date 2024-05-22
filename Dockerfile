@@ -1,15 +1,15 @@
-FROM alpine:3.18.3
+FROM alpine:3.19
 
 RUN adduser -H -D insider insider
 
 RUN apk add \
-    php81-cli \
-    php81-dom \
-    php81-simplexml \
-    php81-tokenizer \
-    php81-xml \
-    php81-xmlwriter \
-    composer=2.5.8-r0
+    php82-cli \
+    php82-dom \
+    php82-simplexml \
+    php82-tokenizer \
+    php82-xml \
+    php82-xmlwriter \
+    composer=2.7.6-r0
 
 USER insider:insider
 WORKDIR /srv/php-insider
