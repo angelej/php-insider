@@ -7,14 +7,14 @@
         }
     ],
     "require": {
-        "php": "^8.1.0",
-        "nikic/php-parser": "^4.16",
-        "symfony/console": "^6.3",
-        "nunomaduro/termwind": "^1.15"
+        "php": "^8.2",
+        "nikic/php-parser": "^5.0.2",
+        "symfony/console": "^7.0.7",
+        "nunomaduro/termwind": "^2.0.1"
     },
     "require-dev": {
-        "pestphp/pest": "^2.9",
-        "phpstan/phpstan": "^1.10"
+        "pestphp/pest": "^2.34.7",
+        "phpstan/phpstan": "^1.11.1"
     },
     "autoload": {
         "psr-4": {

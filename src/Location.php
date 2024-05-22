@@ -56,7 +56,7 @@ class Location {
      */
     public function getLine(): int {
 
-        return $this->node->getLine();
+        return $this->node->getStartLine();
     }
 
     /**
