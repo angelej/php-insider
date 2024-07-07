@@ -6,16 +6,17 @@ jobs:
     test:
         runs-on: ${{ matrix.os }}
         strategy:
-            fail-fast: false
+            fail-fast: true
             matrix:
                 os: [ubuntu-latest]
                 php: [8.3, 8.2]
+                stability: [prefer-lowest, prefer-stable]
 
-        name: PHP ${{ matrix.php }} - ${{ matrix.os }}
+        name: PHP ${{ matrix.php }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
         steps:
             - name: Checkout code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -25,7 +26,7 @@ jobs:
                   coverage: xdebug
 
             - name: Install dependencies
-              run: composer install --no-interaction --prefer-dist --optimize-autoloader
+              run: composer update --no-interaction --prefer-dist --${{ matrix.stability }} --optimize-autoloader
 
             - name: Execute tests
               run: composer test
