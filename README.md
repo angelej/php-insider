@@ -7,7 +7,7 @@ It's not designed to be a fully-automated tool for identifying vulnerabilities, 
 > **Warning!** This repository is currently under development and may contain breaking changes.
 
 ## Installation
-If this tool is used without docker, you have to install `php ^8.2`, `ext-dom`, `ext-simplexml`, `ext-tokenizer`, `ext-xml`, `ext-xmlwriter`, and `composer`.
+If this tool is used without docker, you have to install `php ^8.4`, `ext-dom`, `ext-simplexml`, `ext-tokenizer`, `ext-xml`, `ext-xmlwriter`, and `composer`.
 1. Clone repository
     ```shell
     git clone https://github.com/angelej/php-insider.git
