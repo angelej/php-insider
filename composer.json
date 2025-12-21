@@ -14,8 +14,7 @@
     },
     "require-dev": {
         "pestphp/pest": "^4.2",
-        "phpstan/phpstan": "^2.1",
-        "laravel/pint": "^1.26"
+        "phpstan/phpstan": "^2.1"
     },
     "autoload": {
         "psr-4": {
