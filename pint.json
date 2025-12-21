@@ -1,0 +1,11 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "no_extra_blank_lines": {
+            "tokens": ["extra", "curly_brace_block"]
+        }
+    },
+    "exclude": [
+        "tests/Unit/files"
+    ]
+}
