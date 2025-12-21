@@ -1,38 +1,37 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Angelej\PhpInsider\Commands;
 
+use const PHP_EOL;
+
+use Angelej\PhpInsider\Analyser;
 use Angelej\PhpInsider\File;
 use Angelej\PhpInsider\Level;
-use Angelej\PhpInsider\Analyser;
-use Angelej\PhpInsider\Sinks\Sink;
 use Angelej\PhpInsider\LocationHelper;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
+use Angelej\PhpInsider\Sinks\Sink;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Exception\InvalidOptionException;
+
 use function Termwind\render;
-use const PHP_EOL;
 
 #[AsCommand(
     name: 'analyse',
     description: 'Analyses source code',
     aliases: ['analyze']
 )]
-class AnalyseCommand extends Command {
-
-    /**
-     * @param  \Symfony\Component\Console\Input\InputInterface $input
-     * @param  \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int
-     */
-    protected function execute(InputInterface $input, OutputInterface $output): int {
-
-        if($memoryLimit = $input->getOption('memory-limit')){
-            if(ini_set('memory_limit', $memoryLimit) === false){
+class AnalyseCommand extends Command
+{
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        if ($memoryLimit = $input->getOption('memory-limit')) {
+            if (ini_set('memory_limit', $memoryLimit) === false) {
                 throw new InvalidOptionException('Invalid "--memory-limit" value provided.');
             }
         }
@@ -44,13 +43,12 @@ class AnalyseCommand extends Command {
         $expandLines = max((int) $input->getOption('lines'), 0);
         $level = $this->getLevelOption($input);
 
-        $report = (new Analyser())
+        $report = (new Analyser)
             ->setLevel($level)
             ->analyse($files);
         $sinks = $report->get();
 
-        foreach($sinks as $sink){
-
+        foreach ($sinks as $sink) {
             $this->printSink($sink, $expandLines);
         }
         $this->printSummary($sinks);
@@ -60,55 +58,45 @@ class AnalyseCommand extends Command {
             : Command::SUCCESS;
     }
 
-    /**
-     * @param  \Symfony\Component\Console\Input\InputInterface $input
-     * @return int
-     */
-    private function getLevelOption(InputInterface $input): int {
-
+    private function getLevelOption(InputInterface $input): int
+    {
         $level = (int) $input->getOption('level');
         $min = Level::min()->value;
         $max = Level::max()->value;
 
-        if($level < $min || $level > $max){
-            throw new InvalidOptionException('Invalid "--level" value provided. Level must be between ' . $min . ' and ' . $max . '.');
+        if ($level < $min || $level > $max) {
+            throw new InvalidOptionException('Invalid "--level" value provided. Level must be between '.$min.' and '.$max.'.');
         }
+
         return $level;
     }
 
     /**
-     * @param  \Symfony\Component\Console\Input\InputInterface $input
      * @return string[]
      */
-    private function getExtensionsOption(InputInterface $input): array {
-
-        return array_map(function($ext){
+    private function getExtensionsOption(InputInterface $input): array
+    {
+        return array_map(function ($ext) {
             return ltrim(trim($ext), '.');
         }, $input->getOption('extension'));
     }
 
-    /**
-     * @param  \Angelej\PhpInsider\Sinks\Sink $sink
-     * @param  int $expandLines
-     * @return void
-     */
-    private function printSink(Sink $sink, int $expandLines): void {
+    private function printSink(Sink $sink, int $expandLines): void
+    {
+        $location = $sink->getLocation();
+        $line = $location->getLine();
+        $startLine = max($line - $expandLines, 1);
+        $codeSnippet = $location->getCodeSnippet($expandLines);
 
-            $location = $sink->getLocation();
-            $line = $location->getLine();
-            $startLine = max($line - $expandLines, 1);
-            $codeSnippet = $location->getCodeSnippet($expandLines);
+        if (! str_starts_with($codeSnippet, '<?')) {
+            $startLine = max($startLine - 1, 1);
+            $codeSnippet = '<?php'.PHP_EOL.$codeSnippet;
+        }
 
-            if(!str_starts_with($codeSnippet, '<?')){
+        $codeSnippet = htmlentities($codeSnippet);
+        $breadcrumb = LocationHelper::printBreadcrumb($location);
 
-                $startLine = max($startLine -1, 1);
-                $codeSnippet = '<?php' . PHP_EOL . $codeSnippet;
-            }
-
-            $codeSnippet = htmlentities($codeSnippet);
-            $breadcrumb = LocationHelper::printBreadcrumb($location);
-
-            render(<<<INSIDER_SINK
+        render(<<<INSIDER_SINK
                 <div class="ml-2 mb-1">
                     <span class="px-1 font-bold bg-red-600 text-black">{$sink->getSinkName()}</span> found in file {$breadcrumb}
                     <code line="{$line}" start-line="{$startLine}">{$codeSnippet}</code>
@@ -117,11 +105,10 @@ class AnalyseCommand extends Command {
     }
 
     /**
-     * @param  \Angelej\PhpInsider\Sinks\Sink[] $sinks
-     * @return void
+     * @param  \Angelej\PhpInsider\Sinks\Sink[]  $sinks
      */
-    private function printSummary(array $sinks): void {
-
+    private function printSummary(array $sinks): void
+    {
         $totalSinks = count($sinks);
         $noun = $totalSinks === 1 ? 'sink' : 'sinks';
 
@@ -132,15 +119,14 @@ class AnalyseCommand extends Command {
         INSIDER_SUMMARY);
     }
 
-    /** @return void */
-    protected function configure(): void {
-
+    protected function configure(): void
+    {
         $minLevel = Level::min()->value;
         $maxLevel = Level::max()->value;
 
         $this
             ->addArgument('file', InputArgument::REQUIRED, 'File or directory path to analyse')
-            ->addOption('level', '-l', InputOption::VALUE_REQUIRED, 'Level of analysis [' . $minLevel . '-' . $maxLevel . ']. The higher the level, the more selective the analysis', 0)
+            ->addOption('level', '-l', InputOption::VALUE_REQUIRED, 'Level of analysis ['.$minLevel.'-'.$maxLevel.']. The higher the level, the more selective the analysis', 0)
             ->addOption('extension', '-e', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'File extension', ['php'])
             ->addOption('exclude-file', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'File or directory to exclude', [])
             ->addOption('lines', null, InputOption::VALUE_REQUIRED, 'Number of lines to expand code snippet', 2)

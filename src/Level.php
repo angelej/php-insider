@@ -1,21 +1,21 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Angelej\PhpInsider;
 
-enum Level: int {
+enum Level: int
+{
+    case ZERO = 0;
+    case ONE = 1;
 
-    CASE ZERO = 0;
-    CASE ONE = 1;
-
-    /** @return \Angelej\PhpInsider\Level */
-    public static function min(): self {
-
+    public static function min(): self
+    {
         return self::ZERO;
     }
 
-    /** @return \Angelej\PhpInsider\Level */
-    public static function max(): self {
-
+    public static function max(): self
+    {
         return self::ONE;
     }
 }
