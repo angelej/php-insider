@@ -1,13 +1,14 @@
-<?php declare(strict_types=1);
+<?php
 
-use Angelej\PhpInsider\File;
+declare(strict_types=1);
+
 use Angelej\PhpInsider\Analyser;
+use Angelej\PhpInsider\File;
 use PhpParser\Node\Stmt\ClassMethod;
 
-it('locates "method" tokens', function(){
-
-    $file = new File(__DIR__ . '/../files/Locations/ClassFile.php');
-    $sinks = (new Analyser())->analyse($file);
+it('locates "method" tokens', function () {
+    $file = new File(__DIR__.'/../files/Locations/ClassFile.php');
+    $sinks = (new Analyser)->analyse($file);
     $methodNode = $sinks->inFile($file)
         ->inLine(7)
         ->first()

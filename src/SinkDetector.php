@@ -1,12 +1,14 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Angelej\PhpInsider;
 
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 
-class SinkDetector extends NodeVisitorAbstract {
-
+class SinkDetector extends NodeVisitorAbstract
+{
     /**
      * @var array|string[]
      */
@@ -29,92 +31,77 @@ class SinkDetector extends NodeVisitorAbstract {
         Sinks\FileWrite\LinkSink::class,
         Sinks\FileWrite\MoveUploadedFileSink::class,
         Sinks\FileWrite\SymlinkSink::class,
-        Sinks\InformationDisclosure\PhpinfoSink::class
+        Sinks\InformationDisclosure\PhpinfoSink::class,
     ];
 
-    /**
-     * @var \Angelej\PhpInsider\Location
-     */
     protected Location $currentLocation;
 
-    /**
-     * @var \Angelej\PhpInsider\Report
-     */
     protected Report $report;
 
-    /** @var int */
     protected int $level = 0;
 
-    public function __construct(){
-
+    public function __construct()
+    {
         $this->report = Report::getInstance();
     }
 
-    /**
-     * @param  \PhpParser\Node $node
-     * @return \PhpParser\Node
-     */
-    public function enterNode(Node $node): Node {
-
+    public function enterNode(Node $node): Node
+    {
         $this->currentLocation->setNode($node);
 
-        foreach($this->sinks as $sinkName){
-
+        foreach ($this->sinks as $sinkName) {
             $level = $sinkName::is($node);
 
-            if($level instanceof Level && $level->value >= $this->level){
-
+            if ($level instanceof Level && $level->value >= $this->level) {
                 $sink = new $sinkName(clone $this->currentLocation, $level);
 
                 /** @phpstan-ignore-next-line */
                 $this->report->add($sink);
             }
         }
+
         return $node;
     }
 
-    /**
-     * @param  \PhpParser\Node $node
-     * @return \PhpParser\Node
-     */
-    public function leaveNode(Node $node): Node {
-
-        switch(true){
+    public function leaveNode(Node $node): Node
+    {
+        switch (true) {
             // leave class node
             case $this->currentLocation->getClassNode() === $node:
                 $this->currentLocation->setClassNode(null);
                 break;
 
-            // leave method node
+                // leave method node
             case $this->currentLocation->getMethodNode() === $node:
                 $this->currentLocation->setMethodNode(null);
                 break;
 
-            // leave function node
+                // leave function node
             case $this->currentLocation->getFunctionNode() === $node:
                 $this->currentLocation->setFunctionNode(null);
                 break;
         }
+
         return $node;
     }
 
     /**
-     * @param  \Angelej\PhpInsider\Location $location
      * @return $this
      */
-    public function setLocation(Location $location): self {
-
+    public function setLocation(Location $location): self
+    {
         $this->currentLocation = $location;
+
         return $this;
     }
 
     /**
-     * @param  int $level
      * @return $this
      */
-    public function setLevel(int $level): self {
-
+    public function setLevel(int $level): self
+    {
         $this->level = $level;
+
         return $this;
     }
 }

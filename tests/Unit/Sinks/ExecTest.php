@@ -1,14 +1,15 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
+
+use Angelej\PhpInsider\Analyser;
 use Angelej\PhpInsider\File;
 use Angelej\PhpInsider\Level;
-use Angelej\PhpInsider\Analyser;
 use Angelej\PhpInsider\Sinks\CodeExecution\ExecSink;
 
-it('detects "exec()" tokens (code execution)', function(){
-
-    $file = new File(__DIR__ . '/../files/ExecFile.php');
-    $sinks = (new Analyser())->analyse($file);
+it('detects "exec()" tokens (code execution)', function () {
+    $file = new File(__DIR__.'/../files/ExecFile.php');
+    $sinks = (new Analyser)->analyse($file);
 
     expect($sinks->inFile($file)
         ->inLine(4)

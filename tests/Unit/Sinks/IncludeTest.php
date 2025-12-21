@@ -1,14 +1,15 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
+
+use Angelej\PhpInsider\Analyser;
 use Angelej\PhpInsider\File;
 use Angelej\PhpInsider\Level;
-use Angelej\PhpInsider\Analyser;
 use Angelej\PhpInsider\Sinks\FileInclusion\IncludeSink;
 
-it('detects "include(), include_once(), require(), require_once()" tokens (file inclusion)', function(){
-
-    $file = new File(__DIR__ . '/../files/IncludeFile.php');
-    $sinks = (new Analyser())->analyse($file);
+it('detects "include(), include_once(), require(), require_once()" tokens (file inclusion)', function () {
+    $file = new File(__DIR__.'/../files/IncludeFile.php');
+    $sinks = (new Analyser)->analyse($file);
 
     expect($sinks->inFile($file)
         ->inLine(4)
