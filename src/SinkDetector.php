@@ -26,6 +26,7 @@ class SinkDetector extends NodeVisitorAbstract
         Sinks\FileInclusion\IncludeSink::class,
         Sinks\FileRead\FileGetContentsSink::class,
         Sinks\FileRead\FileSink::class,
+        Sinks\FileRead\FreadSink::class,
         Sinks\FileRead\ReadfileSink::class,
         Sinks\FileWrite\CopySink::class,
         Sinks\FileWrite\RenameSink::class,
