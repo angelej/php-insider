@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Angelej\PhpInsider;
 
+use Angelej\PhpInsider\Reports\Report;
 use Exception;
 use PhpParser\NodeTraverser;
 use PhpParser\Parser;

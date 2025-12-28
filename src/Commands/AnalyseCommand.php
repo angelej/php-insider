@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Angelej\PhpInsider\Commands;
 
-use const PHP_EOL;
-
 use Angelej\PhpInsider\Analyser;
 use Angelej\PhpInsider\File;
 use Angelej\PhpInsider\Level;
-use Angelej\PhpInsider\LocationHelper;
-use Angelej\PhpInsider\Sinks\Sink;
+use Angelej\PhpInsider\Reports\JsonOutput;
+use Angelej\PhpInsider\Reports\TextOutput;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
@@ -18,8 +16,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
-use function Termwind\render;
 
 #[AsCommand(
     name: 'analyse',
@@ -42,18 +38,19 @@ class AnalyseCommand extends Command
         $files = is_dir($file) ? File::glob($file, $extensions, $excludedFiles) : new File($file);
         $expandLines = max((int) $input->getOption('lines'), 0);
         $level = $this->getLevelOption($input);
+        $outputFormat = $this->getOutputFormatOption($input);
 
         $report = (new Analyser)
             ->setLevel($level)
             ->analyse($files);
-        $sinks = $report->get();
 
-        foreach ($sinks as $sink) {
-            $this->printSink($sink, $expandLines);
+        if ($outputFormat === 'json') {
+            new JsonOutput($report, $expandLines)->output();
+        } else {
+            new TextOutput($report, $expandLines)->output();
         }
-        $this->printSummary($sinks);
 
-        return count($sinks) > 0
+        return count($report->get()) > 0
             ? Command::FAILURE
             : Command::SUCCESS;
     }
@@ -81,42 +78,16 @@ class AnalyseCommand extends Command
         }, $input->getOption('extension'));
     }
 
-    private function printSink(Sink $sink, int $expandLines): void
+    private function getOutputFormatOption(InputInterface $input): string
     {
-        $location = $sink->getLocation();
-        $line = $location->getLine();
-        $startLine = max($line - $expandLines, 1);
-        $codeSnippet = $location->getCodeSnippet($expandLines);
+        $format = strtolower(trim((string) $input->getOption('format')));
+        $validFormats = ['text', 'json'];
 
-        if (! str_starts_with($codeSnippet, '<?')) {
-            $startLine = max($startLine - 1, 1);
-            $codeSnippet = '<?php'.PHP_EOL.$codeSnippet;
+        if (! in_array($format, $validFormats, true)) {
+            throw new InvalidOptionException('Invalid "--format" value provided. Valid formats are: '.implode(', ', $validFormats).'.');
         }
 
-        $codeSnippet = htmlentities($codeSnippet);
-        $breadcrumb = LocationHelper::printBreadcrumb($location);
-
-        render(<<<INSIDER_SINK
-                <div class="ml-2 mb-1">
-                    <span class="px-1 font-bold bg-red-600 text-black">{$sink->getSinkName()}</span> found in file {$breadcrumb}
-                    <code line="{$line}" start-line="{$startLine}">{$codeSnippet}</code>
-                </div>
-            INSIDER_SINK);
-    }
-
-    /**
-     * @param  \Angelej\PhpInsider\Sinks\Sink[]  $sinks
-     */
-    private function printSummary(array $sinks): void
-    {
-        $totalSinks = count($sinks);
-        $noun = $totalSinks === 1 ? 'sink' : 'sinks';
-
-        render(<<<INSIDER_SUMMARY
-            <div class="ml-2 mt-1 font-bold">
-                <span class="bg-white text-black px-1">Summary:</span> {$totalSinks} {$noun} found
-            </div>
-        INSIDER_SUMMARY);
+        return $format;
     }
 
     protected function configure(): void
@@ -130,6 +101,7 @@ class AnalyseCommand extends Command
             ->addOption('extension', '-e', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'File extension', ['php'])
             ->addOption('exclude-file', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'File or directory to exclude', [])
             ->addOption('lines', null, InputOption::VALUE_REQUIRED, 'Number of lines to expand code snippet', 2)
+            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'Output format (text, json)', 'text')
             ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit');
     }
 }
