@@ -77,6 +77,7 @@ The higher the level, the more selective the analysis.
 ### File Read
 - [`file_get_contents()`](https://www.php.net/manual/en/function.file-get-contents)
 - [`file()`](https://www.php.net/manual/en/function.file)
+- [`fread()`](https://www.php.net/manual/en/function.fread.php)
 - [`readfile()`](https://www.php.net/manual/en/function.readfile)
 
 ### File Write
