@@ -14,7 +14,7 @@
         "ext-tokenizer": "*",
         "ext-xmlwriter": "*",
         "nikic/php-parser": "^5.0.2",
-        "symfony/console": "^7.0.7",
+        "symfony/console": "^v7.4.1",
         "nunomaduro/termwind": "^2.0.1"
     },
     "require-dev": {
