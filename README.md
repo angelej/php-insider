@@ -91,6 +91,7 @@ The higher the level, the more selective the analysis.
 - [`phpinfo()`](https://www.php.net/manual/en/function.phpinfo)
 
 ### Others
+- [`fopen()`](https://www.php.net/manual/en/function.fopen.php)
 - [`unlink()`](https://www.php.net/manual/en/function.unlink.php)
 
 <br/>
