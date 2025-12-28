@@ -90,6 +90,9 @@ The higher the level, the more selective the analysis.
 ### Information Disclosure
 - [`phpinfo()`](https://www.php.net/manual/en/function.phpinfo)
 
+### Others
+- [`unlink()`](https://www.php.net/manual/en/function.unlink.php)
+
 <br/>
 
 ## Testing
