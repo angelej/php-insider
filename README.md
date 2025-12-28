@@ -96,6 +96,7 @@ The higher the level, the more selective the analysis.
 - [`putenv()`](https://www.php.net/manual/en/function.putenv.php)
 - [`fopen()`](https://www.php.net/manual/en/function.fopen.php)
 - [`unlink()`](https://www.php.net/manual/en/function.unlink.php)
+- [`class_exists()`](https://www.php.net/manual/en/function.class-exists.php)
 
 <br/>
 
