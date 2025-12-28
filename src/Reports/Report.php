@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Angelej\PhpInsider;
+namespace Angelej\PhpInsider\Reports;
 
+use Angelej\PhpInsider\File;
+use Angelej\PhpInsider\Level;
 use Angelej\PhpInsider\Sinks\Sink;
 
 final class Report
