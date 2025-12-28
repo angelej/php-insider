@@ -24,6 +24,8 @@ class LocationHelper
             $crumbs[] = '&#9429; '.$functionNode->name;
         }
 
+        $crumbs[] = '&#9409; '.$location->getLine();
+
         return implode(' &#8250; ', $crumbs);
     }
 }
