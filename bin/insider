@@ -1,5 +1,7 @@
 #!/usr/bin/env php
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 require $_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php';
 
@@ -8,6 +10,6 @@ use Angelej\PhpInsider\Commands\AnalyseCommand;
 
 $app = new Application();
 $command = new AnalyseCommand();
-$app->add($command);
+$app->addCommand($command);
 $app->setDefaultCommand($command->getName());
 $app->run();
