@@ -39,6 +39,7 @@ class SinkDetector extends NodeVisitorAbstract
         Sinks\PutenvSink::class,
         Sinks\FopenSink::class,
         Sinks\UnlinkSink::class,
+        Sinks\ClassExistsSink::class,
     ];
 
     protected Location $currentLocation;
